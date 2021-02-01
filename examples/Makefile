@@ -11,6 +11,10 @@ endif
 ifneq ($(USE_RTTI), 1)
 	CXXFLAGS += -fno-rtti
 endif
+SPDK_DIR ?= ../../spdk
+SPDK_ROOT_DIR := $(abspath $(SPDK_DIR))
+include $(SPDK_ROOT_DIR)/lib/rocksdb/spdk.rocksdb.mk
+EXEC_LDFLAGS += $(SPDK_LIB_LINKER_ARGS) $(ENV_LINKER_ARGS) $(SYS_LIBS)
 
 .PHONY: clean librocksdb
 
