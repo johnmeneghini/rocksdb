@@ -1069,7 +1069,7 @@ enum {
 };
 
 extern ROCKSDB_LIBRARY_API void rocksdb_set_perf_level(int);
-extern ROCKSDB_LIBRARY_API rocksdb_perfcontext_t* rocksdb_perfcontext_create();
+extern ROCKSDB_LIBRARY_API rocksdb_perfcontext_t* rocksdb_perfcontext_create(void);
 extern ROCKSDB_LIBRARY_API void rocksdb_perfcontext_reset(
     rocksdb_perfcontext_t* context);
 extern ROCKSDB_LIBRARY_API char* rocksdb_perfcontext_report(
