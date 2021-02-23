@@ -12,7 +12,7 @@
 
 #include <unistd.h>  // sysconf() - get CPU count
 
-const char DBPath[] = "/tmp/rocksdb_simple_example";
+const char DBPath[] = "/mnt/rocksdb_example";
 const char DBBackupPath[] = "/tmp/rocksdb_simple_example_backup";
 
 int main(int argc, char **argv) {
@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
   // get RocksDB to perform well
   long cpus = sysconf(_SC_NPROCESSORS_ONLN);  // get # of online cores
   rocksdb_options_increase_parallelism(options, (int)(cpus));
-  rocksdb_options_optimize_level_style_compaction(options, 0);
+  //rocksdb_options_optimize_level_style_compaction(options, 0);
   // create the DB if it's not already present
   rocksdb_options_set_create_if_missing(options, 1);
 
@@ -31,23 +31,29 @@ int main(int argc, char **argv) {
   char *err = NULL;
   db = rocksdb_open(options, DBPath, &err);
   assert(!err);
+  printf("RocksDB .. success.\n");
 
   // open Backup Engine that we will use for backing up our database
   be = rocksdb_backup_engine_open(options, DBBackupPath, &err);
   assert(!err);
+  printf("RocksDB backup engine open .. success.\n");
 
   // Put key-value
   rocksdb_writeoptions_t *writeoptions = rocksdb_writeoptions_create();
+  printf("RocksDB write_options_create .. success.\n");
   const char key[] = "key";
   const char *value = "value";
-  rocksdb_put(db, writeoptions, key, strlen(key), value, strlen(value) + 1,
+  printf("keyn = %ld, valn = %ld\n", strlen(key), strlen(value));
+  rocksdb_put(db, writeoptions, key, strlen(key), value, strlen(value)+1,
               &err);
+  printf("RocksDB put .. success.\n");
   assert(!err);
   // Get value
   rocksdb_readoptions_t *readoptions = rocksdb_readoptions_create();
   size_t len;
   char *returned_value =
       rocksdb_get(db, readoptions, key, strlen(key), &len, &err);
+  printf("RocksDB get .. success.\n");
   assert(!err);
   assert(strcmp(returned_value, "value") == 0);
   free(returned_value);
